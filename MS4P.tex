@@ -153,6 +153,16 @@ The notion of grammar we have here is often called `context-free'. The rules for
 
 Both of the grammars we've seen so far have been \emph{recursive}. We've said how to make bigger numbers from smaller numbers, and how to make bigger formulae from smaller formulae. Recursion often makes beginners nervous---circularity is suspicious---and some teachers make the mistake of playing down that nervousness, in an `Oh, you'll get used to it!' sort of way. I'm here to tell you that it's quite reasonable to be nervous about recursion, and to help you ask the extra questions you will need to reassure yourself about recursion you may encounter in the wild.
 
+For a start, it helps to make a distinction between two ways in which recursion can make sense. Some recursions are trying to achieve some functionality which are \emph{eventually finished}: these rely on each recursive sub-thing being simpler, with some guarantee that things can't keep getting simpler forever---you eventually stop because you eventually reach a `base case' with no subproblems. Other recursions are trying to achieve some functionality which is \emph{always ready}: it might stop, it might keep going, but it will always let you ask `what's next?'. The latter is how you expect computer games to behave: you might win, you might lose, but you might just keep on going, and you expect the game to keep responding to you.
+
+The bad recursions never finish but can become unresponsive, and that can happen. Those recursions are worth being afraid of. If you see something defined by recursion, don't run away, but don't assume it makes sense. See if you can find out why it's eventually finished or always ready.
+
+Now, in our world of grammars, we expect our parse trees to have the property that following any path through them eventually stops. What can we say about Theresa May's famous grammar?
+\[\begin{array}{rrl}
+\nt{Brexit} & ::= & \nt{Brexit}
+\end{array}\]
+Is it a bad grammar? No, merely \emph{pointless}! It is well constructed. There is one choice of how to make a Brexit: you make it from a Brexit. So there are no parse trees for this grammar with finite paths, and no text can possibly make sense as a Brexit.
+
 
 \section{abstract syntax trees}
 
