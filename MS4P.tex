@@ -68,26 +68,26 @@ It's also worth asking these three things:
 Computer programs are written in formal languages. You can't just say any old thing and expect a computer to make sense of it, even if these days they're quite willing to bullshit you that they understand. Computer programs tend to be written textually, as a sequence of \emph{lines}, each of which is a sequence of \emph{characters} (i.e., letters, digits, spaces, punctuation, emoji, etc), and that's not particularly helpful if you're trying to understand them---it's merely a convenient fit with our ancient methods for writing stuff down. Text doesn't have much obvious structure, but computer programs do. We need to learn to see, and to talk about how to see.
 
 We have a language (the language of \emph{grammars}) for talking about languages. Let me start with an example
-\newcommand{\term}[1]{\langle\mathit{#1}\rangle}
+\newcommand{\nt}[1]{\langle\mathit{#1}\rangle}
 \[\begin{array}{rrl}
-\term{number} & ::= & \lemon\\
-              &   | & \spud\term{number}
+\nt{Number} & ::= & \lemon\\
+            &   | & \spud\nt{Number}
 \end{array}\]
 How to read this? Where to begin? Which of these things is nearest to hand? You can't be expected to know until someone establishes the conventions.
 
 The place to start is with $::=$, which you can pronounce `is defined to be'. It's a variation on the theme of $=$, but with a particular spin. You're not being asked to agree with this equation, and there's no way you can check it. You're not supposed to think (or pretend) `Oh I knew that!'. When I write this equation, I'm telling you something \emph{new}, and asking you to put up with it for the time being.
 
-The thing to the left of $::=$ is the name of a new \emph{sort of thing}---by convention, the names of sorts of things are written in $\term{\cdot}$ to distinguish them from \emph{actual} things. The $\term{\cdot}$ does the job of `a' or `an' in English---the indefinite article---we're talking about a generic class of things by imagining one, but not a special one. What I'm saying is `I'm inventing a new sort of thing, namely a $\mathit{number}$, and I'm telling you of what a $\mathit{number}$ may consist.'. Everything after $::=$ is the explanation of what I allow these $\mathit{number}$s to be.
+The thing to the left of $::=$ is the name of a new \emph{sort of thing}---by convention, the names of sorts of things are written in $\nt{\cdot}$ to distinguish them from \emph{actual} things. The $\nt{\cdot}$ does the job of `a' or `an' in English---the indefinite article---we're talking about a generic class of things by imagining one, but not a special one. What I'm saying is `I'm inventing a new sort of thing, namely a $\mathit{Number}$, and I'm telling you of what a $\mathit{Number}$ may consist.'. Everything after $::=$ is the explanation of what I allow these $\mathit{Number}$s to be.
 
-The next thing to pay attention to is the $|$ which you can read as `or'. I'm giving you a choice of ways to make $\mathit{number}$s.
+The next thing to pay attention to is the $|$ which you can read as `or'. I'm giving you a choice of ways to make $\mathit{Number}$s.
 
 The first choice I offer is `$\lemon$'. See? In English prose I write it in quotation marks, because I mean the actual word `$\lemon$'. It's not a \emph{variable} which could stand abstractly for a variety of things. It's concretely what it says.
 
-The second choice I offer is the concrete symbol `$\spud{\,}$' which again (because no $\term{\cdot}$) means only what it says, followed by $\term{number}$. The latter indicates that any $\mathit{number}$ you have made already can go in that place.
+The second choice I offer is the concrete symbol `$\spud{\,}$' which again (because no $\nt{\cdot}$) means only what it says, followed by $\nt{Number}$. The latter indicates that any $\mathit{Number}$ you have made already can go in that place.
 
-I didn't offer any other choices. Implicit in this definition is that it is \emph{exhaustive}. Spuds and lemons, that's your lot! I'm saying ``I'm inventing a new sort of thing, namely a $\mathit{number}$, which consists either of `$\lemon$' or of `$\spud{}$' followed by another $\mathit{number}$.'' and I'm also saying ``You can't possibly have \emph{finished} making a $\mathit{number}$ unless you eventually get to a `$\lemon$'.''.
+I didn't offer any other choices. Implicit in this definition is that it is \emph{exhaustive}. Spuds and lemons, that's your lot! I'm saying ``I'm inventing a new sort of thing, namely a $\mathit{Number}$, which consists either of `$\lemon$' or of `$\spud{}$' followed by another $\mathit{Number}$.'' and I'm also saying ``You can't possibly have \emph{finished} making a $\mathit{Number}$ unless you eventually get to a `$\lemon$'.''.
 
-So what are these $\mathit{number}$s?
+So what are these $\mathit{Number}$s?
 \[\begin{array}{r}
 \lemon \\
 \spud\lemon \\
@@ -95,27 +95,67 @@ So what are these $\mathit{number}$s?
 \spud\spud\spud\lemon \\
 \vdots
 \end{array}\]
-But these examples and the `and so on' indicated by `$\vdots$', don't tell us precisely what $\mathit{number}$s are, in general, whereas the grammar does.
+But these examples and the `and so on' indicated by `$\vdots$', don't tell us precisely what $\mathit{Number}$s are, in general, whereas the grammar does.
 
-The grammar does another useful thing, as well. It tells us how to perceive a $\mathit{number}$ as a structure. We can draw a picture of how to see $\spud\spud\lemon$ as a $\mathit{number}$:
-\[
-\begin{array}[b]{l}
-\spud\begin{array}[b]{l}
-\spud\begin{array}[b]{l}
-\lemon\\
-\quad\uparrow\\
-\term{number}
-\end{array}\\
-\quad\uparrow\\
-\term{number}
-\end{array}\\
-\quad\uparrow\\
-\term{number}
-\end{array}
-\]
+\newcommand{\nta}[2]{\begin{array}[b]{l} #2\\ \uparrow\\ \nt{#1}\end{array}}
+The grammar does another useful thing, as well. It tells us how to perceive a $\mathit{Number}$ as a structure. We can draw a picture of how to see $\spud\spud\lemon$ as a $\mathit{Number}$:
+\[\nta{Number}{\spud\nta{Number}{\spud\nta{Number}{\lemon}}}\]
 I've drawn this picture, which is called a `parse tree', with the bottom nearest to hand (they're sometimes drawn the other way up), so you should read it bottom-to-top, like a detective, even though time went top-to-bottom\footnote{In the beginning was the $\lemon$\ldots}. It records how the choices offered by the grammar can be employed to make sense of the text.
 
 Old computer scientists \emph{see} these trees when we \emph{look} at text. We don't even notice that we're doing it, but we experience distress when it doesn't just happen automatically and we look for someone else to blame. You are not born with this mode of perception, and it may take some practice to acquire it.
+
+
+\section{what's in a grammar (and what isn't)?}
+
+\newcommand{\X}{\mathsf{X}}
+\newcommand{\SB}{\mathsf{SumBelow}\;}
+\newcommand{\SH}{\mathsf{Shift}\;}
+Let's have another grammar with a little more to it. It's a little language of formulae involving one variable $\X$.
+\[\begin{array}{rrl}
+\nt{Formula}
+& ::= & \X \\
+&   | & \nt{Number} \\
+&   | & \nt{Formula} * \nt{Formula} \\
+&   | & \nt{Formula} + \nt{Formula} \\
+&   | & \SB \nt{Formula} \\
+&   | & \SH \nt{Formula} \\
+&   | & (\nt{Formula})
+\end{array}\]
+
+What do we notice? Firstly, we have two ways to make a formula with no subformulae---the variable, $\X$ and any number you like. We could insist that numbers be written in $\spud\lemon$ form, but let's allow ourselves the brevity of Arabic numerals. That means we're in a position to make an `eventually reaching the $\lemon$' promise about formulae: if you keep tearing formulae apart, you eventually reach $\X$ or a number (in which you eventually reach the $\lemon$).
+
+Secondly, we have choices with \emph{two} subformulae. That means our parse trees can spread out. E.g., $(\X + 2)*\X$ has parse tree
+\[
+\nta{Formula}{(\nta{Formula}{\nta{Formula}{\X} +  \nta{Formula}{\nta{Number}{2}}})}
+*
+\nta{Formula}{\X}
+\]
+If we're exploring the parse tree, we have a choice of paths we can take. Our `eventually $\lemon$' promise has to get stronger: you eventually reach $\X$ or a number, \emph{whatever path you choose}.
+
+Thirdly, there are weird things in the grammar that I haven't explained yet---$\SB\cdot$ and $\SH\cdot$. You don't need to know what they \emph{mean} to be able to check whether a formula has a parse tree. You can see that $\SB(\X * \X)$ is fine, but $\SH +$ is not (because $+$ is not a formula). And you might \emph{think} you know what $+$ and $*$ mean, because they look like standard symbols for addition and multiplication, but I haven't confirmed that that's what \emph{I} mean. Grammars don't say what things mean---they filter and structure texts which are \emph{plausible}, discarding texts which are obvious \emph{gibberish}. That's to say they \emph{ask} helpful questions about the meanings of some things in particular, but they don't offer any \emph{answers}.
+
+Fourthly, the grammar is \emph{ambiguous}. It is not immediately obvious whether $\SH\X*\X$ says
+\[
+\nta{Formula}{\SH\nta{Formula}{\nta{Formula}{\X}*\nta{Formula}{\X}}}
+\mbox{or}\qquad
+\nta{Formula}{\nta{Formula}{\SH\nta{Formula}{\X}}*\nta{Formula}{\X}}
+\]
+Worse, we do not automatically know whether $\X+\X+\X$ groups to the left or to the right, and we might hope not to care, but for now we must worry about it. The simplest strategy to deal with ambiguity is to reject ambiguous texts, given that our grammar lets us use parentheses to resolve them: at least, that's what we might \emph{hope} the parentheses are for. At the moment, we have no reason to believe $\X$, $(\X)$ and $((\X))$ will all mean the same thing, and there are computer languages where wrapping extra sets of parentheses round stuff really does change its meaning.
+
+As a side remark, one awkward consequence of mathematics being taught at school to some fairly standardised curriculum is a misplaced entitlement to notation working in all sorts of contexts the way it did in that context. One symptom of this malaise is the presumption that parentheses $(\cdot)$, brackets $[\cdot]$ and braces $\{\cdot\}$ are interchangeable and serve only to indicate grouping. This is very seldom, if ever, the case in computer programming languages, or in the notations we use to write about them. You should never expect $[x]$ to mean the same as $x$.
+
+For \emph{this} particular language of formulae, I'm willing to promise you that parentheses $(\cdot)$ are used only for grouping, i.e. to choose between possible parse trees. The meaning of a formula with enclosing parentheses will always be the same as that formula without parentheses. We may thus omit parentheses from parse trees---by the time we have \emph{one} parse tree, their work is done!
+
+The notion of grammar we have here is often called `context-free'. The rules for what constitutes a formula don't change, depending on where the formula is. There are more complex aspects to meaningfulness which context-free grammars can't capture. For example, if we wanted to write the grammar of grammars themselves, we could not enforce the property that every sort of thing mentioned to the right of $::=$ has a unique definition, i.e., occurring to the left of exactly one $::=$ somewhere in the same grammar. That's to say the \emph{scope} of names is exactly the sort of context which context-free grammars can't handle. So, don't expect grammars to encode complicated requirements for coordination between separate regions of a text.
+
+
+\section{a note on recursion}
+
+Both of the grammars we've seen so far have been \emph{recursive}. We've said how to make bigger numbers from smaller numbers, and how to make bigger formulae from smaller formulae. Recursion often makes beginners nervous---circularity is suspicious---and some teachers make the mistake of playing down that nervousness, in an `Oh, you'll get used to it!' sort of way. I'm here to tell you that it's quite reasonable to be nervous about recursion, and to help you ask the extra questions you will need to reassure yourself about recursion you may encounter in the wild.
+
+
+\section{abstract syntax trees}
+
 
 \chapter{squish a bunch of stuff}
 
