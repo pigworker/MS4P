@@ -45,6 +45,7 @@ If you're thinking ``Those aren't numbers: that's just sculpture with groceries!
 \end{enumerate}
 But how do you know you \emph{can} count the spuds? How do you know that you won't just keep counting for ever? It's because you eventually get to the lemon.
 
+
 \section{addition as substitution}
 
 Adding these numbers is easy. If you're holding one of them in each hand, work your way along the left number until you reach the left lemon, then detach it, and stab the right number with the exposed stick, then work your way back out to the leftmost spud. In other words, \emph{substitute} the right \emph{number} for the left \emph{lemon}
@@ -64,6 +65,34 @@ It's also worth asking these three things:
 \item What if the number in your right hand is a lemon? (You replace the left lemon by the lemon in your right hand and the answer is indistinguishable from the left number you started with.)
 \item What if you add three things? Does it matter whether you add left to middle first, or middle to right? (It doesn't matter. Both ways round, you end up with all the spuds you started with, in the same order (not that you can tell), and the rightmost lemon on the end.)
 \end{enumerate}
+
+
+\section{synchronized spuds make a race to the lemon}
+
+Suppose you are holding two numbers (left and right, say), each by their most recent potato. What will happen if you work your way towards the two lemons in tandem, one potato per step in each? Remember that for both numbers, you are sure that stepping in this way means you will eventually get to the lemon? It's a race to the lemon! There are three possibilities:
+\begin{itemize}
+\item you reach the left lemon while the right number still has a potato. That means the original left number was strictly smaller than the original right number, and now that the left number is a lemon, the current right number is the \emph{difference}. As it were, you have found out that the original numbers were $x$ and $x+\spud y$ for some $x$ and $y$;
+\item you reach the left lemon and the right lemon at the same time --- the dead heat means the numbers were both some $x$;
+\item you reach the right lemon while the left number still has a potato. So the original left number was greater and the current left number is by how much. The original numbers were $x+\spud y$ and $x$, for some $x$ and $y$.
+\end{itemize}
+
+You should notice that, in all three cases, the number which won the lemon race, called $x$ above, is the largest number from which you can reach \emph{both} numbers by \emph{adding}. You either add $\lemon$ and $\spud y$, $\lemon$ and $\lemon$, or $\spud y$ and $\lemon$, respectively. You have figured out how close you can get to both numbers by adding, together with what the differences are. In other words, we're \emph{undoing} adding by as little as possible. Here, at least one of the differences is nothing, and when the inputs are equal they both are.
+
+It's funny: this lemon race tells you `maximum' and `minimum', `less than, equal, or greater than', and `difference' all at once. The usual mathematical or programming presentation makes all of these tests and operations distinct, but they are all incomplete facets of the same underlying computation. (The same is true of computations in hardware using binary numbers.)
+
+
+
+\section{Euclid's lemon racing game}
+
+Here's a game that the Greek mathematician Euclid used to play with potatoes and lemons.\footnote{Consider a pinch of historical salt.} It's a game which computes one number from two.
+
+You start with two numbers, one in each hand. If one hand holds a lemon, stop: the answer is the number in your other hand! Otherwise, run a lemon race. Now, at least one hand is holding a lemon: put that hand back to the start of its number; keep the other hand where it is and detach any potatoes you passed by to get there. That's to say, replace the larger number by the difference. Go back to the start.
+
+Why does this game reach an end? Because you don't run the lemon race unless you start with potatoes in both hands, so each step will result i one or other hand moving strictly nearer its lemon, and both sides promise that you eventually get to the lemon.
+
+But, perhaps more importantly, what on earth is the meaning of the output of this game?
+
+(Some people have been known to tell a version of this story in which Euclid repeatedly breaks the largest square possible off from a rectangular piece of chocolate\footnote{Likewise.} until there is no chocolate left. I find the spuds and lemons version more savoury, because nobody wants a rectangle of chocolate with width zero.)
 
 
 \section{puzzles}
