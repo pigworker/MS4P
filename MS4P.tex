@@ -131,7 +131,7 @@ Our method of addition replaced the left $\lemon$ by the right number. You could
   \item Are any of your `minky', `manky', `munky' tests multiply-respects-or? If so, which and why?
   \item In a black box, I have a multiply-respects-or test which is not boring. What answer does it give for the $\lemon$? No, you may not look in the box!
   \item Is divisibility by \emph{four} a multiply-respects-or test? Why?
-  \item What are the non-boring multiply-respects-or tests? (Note: it's terribly unfair for me to ask this question at this stage, but we'll make sense of it eventually.)
+  \item What are the non-boring multiply-respects-or tests? (Note: it's terribly unfair of me to ask this question at this stage, but we'll make sense of it eventually.)
   \end{enumerate}
 \end{puz}
 
@@ -192,41 +192,51 @@ Let's have another grammar with a little more to it. It's a little language of f
 &   | & \nt{Number} \\
 &   | & \nt{Formula} * \nt{Formula} \\
 &   | & \nt{Formula} + \nt{Formula} \\
-&   | & \SB \nt{Formula} \\
-&   | & \SH \nt{Formula} \\
+%&   | & \SB \nt{Formula} \\
+%&   | & \SH \nt{Formula} \\
 &   | & (\nt{Formula})
 \end{array}\]
 
 What do we notice? Firstly, we have two ways to make a formula with no subformulae---the variable, $\X$ and any number you like. We could insist that numbers be written in $\spud\lemon$ form, but let's allow ourselves the brevity of Arabic numerals. That means we're in a position to make an `eventually reaching the $\lemon$' promise about formulae: if you keep tearing formulae apart, you eventually reach $\X$ or a number (in which you eventually reach the $\lemon$).
 
-Secondly, we have choices with \emph{two} subformulae. That means our parse trees can spread out. E.g., $(\X + 2)*\X$ has parse tree
+Secondly, we have choices with \emph{two} subformulae. That means our parse trees can spread out like they're called trees for a reason. E.g., $(\X + 2)*\X$ has parse tree
 \[
-\nta{Formula}{(\nta{Formula}{\nta{Formula}{\X} +  \nta{Formula}{\nta{Number}{2}}})}
+\nta{Formula}{(\nta{Formula}{\nta{Formula}{\X} + \nta{Formula}{\nta{Number}{2}}})}
 *
 \nta{Formula}{\X}
 \]
 If we're exploring the parse tree, we have a choice of paths we can take. Our `eventually $\lemon$' promise has to get stronger: you eventually reach $\X$ or a number, \emph{whatever path you choose}.
 
-Thirdly, there are weird things in the grammar that I haven't explained yet---$\SB\cdot$ and $\SH\cdot$. You don't need to know what they \emph{mean} to be able to check whether a formula has a parse tree. You can see that $\SB(\X * \X)$ is fine, but $\SH +$ is not (because $+$ is not a formula). And you might \emph{think} you know what $+$ and $*$ mean, because they look like standard symbols for addition and multiplication, but I haven't confirmed that that's what \emph{I} mean. Grammars don't say what things mean---they filter and structure texts which are \emph{plausible}, discarding texts which are obvious \emph{gibberish}. That's to say they \emph{ask} helpful questions about the meanings of some things in particular, but they don't offer any \emph{answers}.
+Thirdly, I haven't said anything about what these formulae mean. You might \emph{think} you know what $+$ and $*$ mean, because they look like standard symbols for addition and multiplication, but I haven't confirmed that that's what \emph{I} mean by them. Grammars don't say what things mean---they filter and structure texts which are \emph{plausible}, discarding texts which are obvious \emph{gibberish}. That's to say they \emph{ask} helpful questions about the meanings of some things in particular, but they don't offer any \emph{answers}.
 
-Fourthly, the grammar is \emph{ambiguous}. It is not immediately obvious whether $\SH\X*\X$ says
+Fourthly, the grammar is \emph{ambiguous}. It is not immediately obvious whether $2+\X*\X$ says
 \[
-\nta{Formula}{\SH\nta{Formula}{\nta{Formula}{\X}*\nta{Formula}{\X}}}
-\mbox{or}\qquad
-\nta{Formula}{\nta{Formula}{\SH\nta{Formula}{\X}}*\nta{Formula}{\X}}
+\nta{Formula}{\nta{Formula}{2}+\nta{Formula}{\nta{Formula}{\X}*\nta{Formula}{\X}}}
 \]
-Worse, we do not automatically know whether $\X+\X+\X$ groups to the left or to the right, and we might hope not to care, but for now we must worry about it. The simplest strategy to deal with ambiguity is to reject ambiguous texts, given that our grammar lets us use parentheses to resolve them: at least, that's what we might \emph{hope} the parentheses are for. At the moment, we have no reason to believe $\X$, $(\X)$ and $((\X))$ will all mean the same thing, and there are computer languages where wrapping extra sets of parentheses round stuff really does change its meaning.
+or
+\[
+\nta{Formula}{\nta{Formula}{\nta{Formula}{2}+\nta{Formula}{\X}}*\nta{Formula}{\X}}
+\]
+Worse, we do not automatically know whether $\X+\X+\X$ groups to the left or to the right, and we might hope not to care, but for now we must worry about it. You may have learned some rules at school about this sort of thing, and that's good, because at least you can see we might need rules to manage this sort of situation. But I'm a \emph{university} teacher, so I can take school rules, grind them to a powder and blow them out the window, if I feel that would improve my day.
+The simplest strategy to deal with ambiguity is to reject ambiguous texts, given that our grammar lets us use parentheses to resolve them: at least, that's what we might \emph{hope} the parentheses are for. At the moment, we have no reason to believe $\X$, $(\X)$ and $((\X))$ will all mean the same thing, and there are computer languages where wrapping extra sets of parentheses round stuff really does change its meaning.
 
 As a side remark, one awkward consequence of mathematics being taught at school to some fairly standardised curriculum is a misplaced entitlement to notation working in all sorts of contexts the way it did in that context. One symptom of this malaise is the presumption that parentheses $(\cdot)$, brackets $[\cdot]$ and braces $\{\cdot\}$ are interchangeable and serve only to indicate grouping. This is very seldom, if ever, the case in computer programming languages, or in the notations we use to write about them. You should never expect $[x]$ to mean the same as $x$.
 
-For \emph{this} particular language of formulae, I'm willing to promise you that parentheses $(\cdot)$ are used only for grouping, i.e. to choose between possible parse trees. The meaning of a formula with enclosing parentheses will always be the same as that formula without parentheses. We may thus omit parentheses from parse trees---by the time we have \emph{one} parse tree, their work is done!
+For \emph{this} particular language of formulae, I'm willing to promise you that parentheses $(\cdot)$ are used only for grouping, i.e. to choose between possible parse trees. The meaning of a formula with enclosing parentheses will always be the same as that formula without parentheses. I promise you that
+\[\nta{Formula}{(\nta{Formula}{\nta{Formula}{\X}+\nta{Formula}{2}})}
+\qquad\mbox{and}\qquad
+\nta{Formula}{\nta{Formula}{\X}+\nta{Formula}{2}}
+\]
+with the parenthesesized version needed only to avoid ambiguity when this formula is part of a larger formula.
 
 The notion of grammar we have here is often called `context-free'. The rules for what constitutes a formula don't change, depending on where the formula is. There are more complex aspects to meaningfulness which context-free grammars can't capture. For example, if we wanted to write the grammar of grammars themselves, we could not enforce the property that every sort of thing mentioned to the right of $::=$ has a unique definition, i.e., occurring to the left of exactly one $::=$ somewhere in the same grammar. That's to say the \emph{scope} of names is exactly the sort of context which context-free grammars can't handle. So, don't expect grammars to encode complicated requirements for coordination between separate regions of a text.
+
+Grammars give us a way to specify languages which are local, artificial, and closed. Out there, in the wilds of mathematics, there might be subtraction and division and $\pi$ and $\mathsf{Y}$, but when we choose to invent what a $\nt{Formula}$ is in this particular way, we can put all of those cosiderations to one side. There's a certain sense of ``Here, we need only worry about\ldots'' with grammars. Of course, that cuts both ways: I'm within my rights to invent grammars which are local to one puzzle. You cannot simply memorise all the grammars you will ever need. That would be like learning a poem by heart innstead of learning to listen.
 
 
 \section{a note on recursion}
 
-Both of the grammars we've seen so far have been \emph{recursive}. We've said how to make bigger numbers from smaller numbers, and how to make bigger formulae from smaller formulae. Recursion often makes beginners nervous---circularity is suspicious---and some teachers make the mistake of playing down that nervousness, in an `Oh, you'll get used to it!' sort of way. I'm here to tell you that it's quite reasonable to be nervous about recursion, and to help you ask the extra questions you will need to reassure yourself about recursion you may encounter in the wild.
+Both of the grammars we've seen so far have been \emph{recursive}. We've said how to make bigger numbers from smaller numbers, and how to make bigger formulae from smaller formulae. Recursion often makes beginners nervous---circularity is suspicious---I'm not going to make the mistake of playing down that nervousness, in an `Oh, you'll get used to it!' sort of way. I'm here to tell you that it's quite reasonable to be nervous about recursion, and to help you ask the extra questions you will need to reassure yourself about recursions you may encounter in the wild.
 
 For a start, it helps to make a distinction between two ways in which recursion can make sense. Some recursions are trying to achieve some functionality which are \emph{eventually finished}: these rely on each recursive sub-thing being simpler, with some guarantee that things can't keep getting simpler forever---you eventually stop because you eventually reach a `base case' with no subproblems. Other recursions are trying to achieve some functionality which is \emph{always ready}: it might stop, it might keep going, but it will always let you ask `what's next?'. The latter is how you expect computer games to behave: you might win, you might lose, but you might just keep on going, and you expect the game to keep responding to you.
 
@@ -240,6 +250,63 @@ Is it a bad grammar? No, merely \emph{pointless}! It is well constructed. There 
 
 
 \section{abstract syntax trees}
+
+\newcommand{\D}[1]{\mathtt{#1}}
+\newcommand{\C}[1]{\mathtt{#1}}
+
+Grammars tell us how to see structure in a text. A parse tree shows the original text with that structure imposed upon it. If we want to compute with a formula, perhaps to give it some sort of meaning, it is this structure which matters, not the precise details of the text. We should hope that it doesn't matter\footnote{but I could tell you some horror stories} whether you write $\X+2$ or $\X\;+\;2$, and a few extra sets of parentheses shouldn't make any difference, provided they go round valid subformulae. How do we get our hands on the structure?
+
+We could, of course, make \emph{models} of these structures from fruit, vegetables, and cocktail sticks. We might use an apple with two sticks coming out to build a formula with $+$, a pear with two sticks for $*$, a nectarine for a numerical formula (with one stick to connect it to a spuds-and-lemon number), and a sprout with no sticks coming out for $\X$. Then we can compute with formulae in the same hand-on way we did with numbers. You always start holding the outermost thing, but you can follow the sticks inwards, ad no matter which way you go, you will eventually get to a nectarine or a sprout.
+
+The nectarines are important. Conceptually, formulae are distinct from numbers. They are different \emph{types} of thing. If we're holding on to a formula, we expect an apple, a pear, a nectarine or a sprout. If we're holding on to a number, we expect a spud or a lemon. It is visually appealing to write a numerical formula as just the unadorned number itself. But when we're explaining computational processes, it will be helpful to be precise about when we are working with numbers and when we are working with formulae. The number 2 is made from two spuds and a lemon; the formula 2 is made from a nectarine, two spuds and a lemon.
+
+Note that the apples and pears are ways of making a tree for a formula, just as spuds and lemons make numbers, whereas addition and multiplication are processes we know for \emph{computing} with numbers. We could \emph{interpret} a formula as a calculation to perform with numbers:
+\begin{itemize}
+\item to interpret an apple formula as a number, interpret both subformulae as numbers, then add those numbers;
+\item to interpret a pear formula as a number, interpret both subformulae as numbers, then multiply those numbers;
+\item to interpret a nectarine formula as a number, remove the nectarine and give back the number it's connected to.
+\end{itemize}
+You can see that the above procedure is recursive, but it's the `eventually finished' kind of recursion: it works by taking the formula apart into smaller and smaller pieces. A formula written `$2*3$' turns into
+\[\begin{array}{l@{\quad}l}
+\spud\spud\lemon & \spud\spud\spud\lemon \\
+| & | \\
+\mbox{nectarine} & \mbox{nectarine} \\
+\multicolumn{2}{c}{\backslash\mbox{pear}/\hspace*{0.7in}}
+\end{array}\]
+Our procedure tells us first to peel off the nectarines to give us $2$ and $3$ respectively, and then to multiply those numbers, yielding 6.
+
+But haven't I forgotten something? What if the formula says `$2*\X$'? What on earth are we to do with the sprout? What number shall we return when we see it?\footnote{decem?} We won't know unless somebody tells us. Let us make a virtue of that necessity. To do this procedure properly, we need to be given two inputs, a formula and the number that $\X$ stands for. Now we can give the missing rule:
+\begin{itemize}
+\item to interpret a sprout formula, copy the number that was given as an input.
+\end{itemize}
+
+So if the formula is `$2*\X$' and the number is 7, we multiply 2 by 7 to compute the output 14.
+
+
+\section{substitute the sprouts}
+
+Remember when we did adding? We had a left number and a right number, and we replaced the left lemon by the right number. Guess what! We can do something very similar with two formulae.
+
+Suppose you have a left formula and a right formula. You can make a new formula by replace \emph{all} the left sprouts by copies of the right formula. So if we have `$\X*\X$' on the left and `$\X+2$' on the right, we'll get `$(\X+2)*(\X+2)$' as our new formula. Note that I had to put some extra parentheses in the text of the new formula to make sure it parses unambiguously as the tree I computed: the substitution was not textual but structural. Bear in mind also that our formula trees might not have any sprouts in them: if the left formula is `$5$' and the right formula is `$\X+2$', we'll get $5$ as the result of substituting all of the left sprouts --- all none of them.
+
+It's also worth asking these three things:
+\begin{enumerate}
+\item What if the formula in your left hand is a sprout? (You replace the sprout in your left hand with the formula in your right, and the answer is exactly the right formula.)
+\item What if the formula in your right hand is a sprout? (You replace all the left sprouts by the copies of the sprout in your right hand and the answer is indistinguishable from the left formula you started with.)
+\item What if you substitute three things? Does it matter whether you substitute middle into left first, or right into middle? (It doesn't matter. Both ways round, you end up with the same overall combined formula.)
+\end{enumerate}
+
+Surprised? You shouldn't be. Substituting all the sprouts is a lot like substituting all the lemons. It's just that the way numbers are built means that `all the lemons' means `exactly the lemon you're bound to find at the end', whereas a formula can contain any number (including zero) of sprouts.
+
+Here's something that might seem a little more surprising. Let's take formulae `$\X*\X$' on the left and `$\X+2$' on the right, again and consider the number $5$. We could
+\begin{itemize}
+\item either interpret `$\X+2$' with $5$ for $\X$ and get $7$, then interpret `$\X*\X$' with $7$ for $\X$ and get $49$.
+\item or substitute to get `$(\X+2)*(\X+2)$', then interpret with $5$ for $\X$ to get $49$.
+\end{itemize}
+Coincidence? I think not! There's some connection between substituting the formulae and sequencing their interpretations, and it has something to do with the way substituting with a sprout in either hand means `do nothing' and interpreting a sprout means `do nothing' to the number we start with. Does it always work? I could say `yes', but I might be lying. And you could try some experiments, but then you might just get bored before you get unlucky. Let's learn to \emph{prove} it.
+
+(Also, let's see if we can build trees out of something more manageable than fruit and veg.)
+
 
 
 \chapter{squish a bunch of stuff}
