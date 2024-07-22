@@ -1,0 +1,56 @@
+data N = Z | S N
+
+(+) :: N -> N -> N
+defined x + y inductively x where
+  defined x + y from x where
+    defined Z + y = y
+    defined S x + y = S (x + y)
+
+(*) :: N -> N -> N
+defined x * y inductively x where
+  defined x * y from x where
+    defined Z * y = Z
+    defined S x * y = y + (x * y)
+
+data Bool = False | True
+
+data Poly
+  = Num N
+  | Var
+  | Add Poly Poly
+  | Mul Poly Poly
+  | AfS Poly
+  | Sum Poly
+
+sumBelow :: (N -> N) -> N -> N
+defined sumBelow f x inductively x where
+  defined sumBelow f x from x where
+    defined sumBelow f Z = Z
+    defined sumBelow f (S x) = sumBelow f x + f x
+
+eval :: Poly -> N -> N
+defined eval f x inductively f where
+  defined eval f x from f where
+    defined eval (Num n) x = n
+    defined eval Var x = x
+    defined eval (Add f g) x = eval f x + eval g x
+    defined eval (Mul f g) x = eval f x * eval g x
+    defined eval (AfS f) x = eval f (S x)
+    defined eval (Sum f) x = sumBelow (eval f) x
+
+diff :: Poly -> Poly
+defined diff f inductively f where
+  defined diff f from f where
+    defined diff (Num n) = Num Z
+    defined diff Var = Num (S Z)
+    defined diff (Add f g) = Add (diff f) (diff g)
+    defined diff (Mul f g) = Add (Mul (diff f) g) (Mul (AfS f) (diff g))
+    defined diff (AfS f) = AfS (diff f)
+    defined diff (Sum f) = f
+
+prove eval f x + eval (diff f) x = eval f (S x) inductively f where
+  prove eval f x + eval (diff f) x = eval f (S x) from f where
+    given f = Num n prove eval (Num n) x + eval (diff (Num n)) x = eval (Num n) (S x) ?
+    given f = Var prove eval Var x + eval (diff Var) x = eval Var (S x) ?
+    given f = Add g h prove eval (Add g h) x + eval (diff (Add g h)) x = eval (Add g h) (S x) test
+    given f = Mul g h prove eval (Mul g h) x + eval (diff (Mul g h)) x = eval (Mul g h) (S x) test
