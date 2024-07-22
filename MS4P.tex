@@ -13,7 +13,10 @@
 \author{Conor McBride}
 \maketitle
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{spuds and a lemon}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Let's make some numbers! You'll need a bag of lemons, a sack of potatoes, and a load of sticks (e.g. cocktail sticks) which are pointy at both ends. (If you have suitable electrodes and wires, you can make batteries as well as number.)
 
@@ -81,7 +84,6 @@ You should notice that, in all three cases, the number which won the lemon race,
 It's funny: this lemon race tells you `maximum' and `minimum', `less than, equal, or greater than', and `difference' all at once. The usual mathematical or programming presentation makes all of these tests and operations distinct, but they are all incomplete facets of the same underlying computation. (The same is true of computations in hardware using binary numbers.)
 
 
-
 \section{Euclid's lemon racing game}
 
 Here's a game that the Greek mathematician Euclid used to play with potatoes and lemons.\footnote{Consider a pinch of historical salt.} It's a game which computes one number from two.
@@ -118,7 +120,11 @@ But, perhaps more importantly, what on earth is the meaning of the output of thi
 \end{puz}
 
 \begin{puz}
-Our method of addition replaced the left $\lemon$ by the right number. You could also consider computations which replace each $\spud$ in a number by the same something (which had better have a stick on the end). What can you compute in this way?
+Our method of addition replaced the left $\lemon$ by the right number. You could also consider computations which replace each $\spud$ in a number by the same something (which had better be ready to attach to a number). What can you compute in this way?
+\end{puz}
+
+\begin{puz}
+Our method of addition dismantles the left number and keeps the right number intact. It is thus far from obvious that $x+y = y+x$. Devise a method for adding in a way which is conspicuously symmetrical. Do the same for multiplication.
 \end{puz}
 
 \begin{puz}
@@ -136,9 +142,9 @@ Our method of addition replaced the left $\lemon$ by the right number. You could
 \end{puz}
 
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{seeing the trees}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Computer programs are written in formal languages. You can't just say any old thing and expect a computer to make sense of it, even if these days they're quite willing to bullshit you that they understand. Computer programs tend to be written textually, as a sequence of \emph{lines}, each of which is a sequence of \emph{characters} (i.e., letters, digits, spaces, punctuation, emoji, etc), and that's not particularly helpful if you're trying to understand them---it's merely a convenient fit with our ancient methods for writing stuff down. Text doesn't have much obvious structure, but computer programs do. We need to learn to see, and to talk about how to see.
 
@@ -308,8 +314,9 @@ Coincidence? I think not! There's some connection between substituting the formu
 (Also, let's see if we can build trees out of something more manageable than fruit and veg.)
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{squish a bunch of stuff}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 If you tap your foot five times, and then you tap your foot six times, you'll have tapped your foot eleven times. There's some kind of relationship between adding up numbers and repetitive action sequences.
 
@@ -478,6 +485,73 @@ We've been drawing
 \[
 \naw\neu \qquad \wye st{s\com t}
 \]
+
+
+\appendix
+
+\chapter{solutions}
+\newtheorem{sol}{Solution}[section]
+
+\section{spuds and lemons}
+
+\begin{sol}
+  An `add-respects-or' test is a computable way to decide a true-or-false property of spuds-and-lemon numbers such that
+  \begin{itemize}
+  \item the test gives false for a $\lemon$;
+    \item whenever you can split up any number $x$ as $y+z$ in any way, the test gives true for $x$ if and only if the test gives true either for $y$ or for $z$ or for both.
+  \end{itemize}
+  A `boring' test is one which always gives the same answer, no matter what number you test.
+  \begin{enumerate}
+  \item Find one boring add-respects-or test.\\
+    \emph{The test which always gives false is certainly boring, and it satisfies both conditions for being add-respects-or.}
+  \item Either find a different boring add-respects-or test, or explain why no such test exists.\\
+    \emph{The only other boring test is the one which always gives true, but it violates the condition that the test must give false for the $\lemon$.}
+  \item Find an add-respects-or test which is \emph{not} boring.
+    \emph{The property of containing a $\spud\;$ is false for $\lemon$ but true for all the other numbers, so it is not boring and it satisifies the first criterion. Addition exactly preserves all the $\spud\,$s in the numbers it acts on, so the second condition is satsfied, too.}
+  \item Either find a different non-boring add-respects-or test, or explain why no such test exists.   \emph{Every number can be decomposed as the sum of as many $\spud\lemon$ numbers as there were $\spud\,$s in the first place. As a result, an add-respects-or test for any number with spuds gives the same answer as testing $\spud\lemon$: if that's false, it's boring; if that's true, that's testing for containing a spud; other options are available. }
+  \end{enumerate}
+\end{sol}
+
+\begin{sol}
+  Let us say that a number is `munky' if it is exactly divisible by three, `minky' if division by three leaves a remainder of one, and `manky' if division by three leaves a remainder of two. Explain how to test these properties of spuds-and-lemon numbers. You should be able to remove one spud at a time and test what is left. After all, you will eventually get to the lemon! Hint: it is easier to solve all three parts of this puzzle together, rather than taking the one at a time.
+
+  \emph{If you're testing a $\lemon$, it's munky, not minky or manky. Meanwhile $\spud n$ is munky if $n$ is manky, minky if $n$ is munky, and manky if $n$ is minky.}
+\end{sol}
+
+
+\begin{sol}
+  Our method of addition replaced the left $\lemon$ by the right number. You could also consider computations which replace each $\spud$ in a number by the same something (which had better be ready to attach to a number). What can you compute in this way?
+
+  \emph{Multiplication. If you have left and right numbers, removing the right lemon gives you something to replace each left spud with. That will add as many copies of the right number as there are left spuds. }
+\end{sol}
+
+
+\begin{sol}
+  Our method of addition dismantles the left number and keeps the right number intact. It is thus far from obvious that $x+y = y+x$. Devise a method for adding in a way which is conspicuously symmetrical. Do the same for multiplication.
+
+  \emph{You can tear down both numbers at the same time. If either number is a $\lemon$, their sum is the other number. If they're both $\spud\,$s, remove both outermost spuds, add what remains, then attach two spuds to the answer. The key to multiplication is to add at the same time. Here goes. If either number is a $\lemon$, their sum is the other number and their product is a $\lemon$. If they're both $\spud\,$s, remove both outermost spuds, add and multiply what remains; grow the product by the sum and one spud, and grow the sum by two spuds as before.}
+\end{sol}
+
+\begin{sol}
+  A `multiply-respects-or' test is a computable way to decide a true-or-false property of spuds-and-lemon numbers such that
+  \begin{itemize}
+  \item the test gives false for $\spud\lemon$;
+  \item whenever you can split up any number $x$ as $y\times z$ in any way, the test gives true for $x$ if and only if the test gives true either for $y$ or for $z$ or for both.
+  \end{itemize}
+  \begin{enumerate}
+  \item Are any of your `minky', `manky', `munky' tests multiply-respects-or? If so, which and why?\\
+    \emph{Testing for being munky is multiply-respects-or, because $3$ is prime.
+    Factorising a number amounts to partitioning its prime factors. A $3$ in the whole set of prime factors must end up in one part of the partition. $4$ is a minky number, but $4 = 2*2$ and $2$ is manky, so neither minky nor manky are multiply-respects-or tests.}
+  \item In a black box, I have a multiply-respects-or test which is not boring. What answer does it give for the $\lemon$? No, you may not look in the box!\\
+    \emph{It must give true. Suppose otherwise. Pick any number $n$. Recall that $n*0 = 0$.
+    That means testing $n$ or false gives false, by respecting or, so testing $n$ gives false. Hence the test is boring.}
+  \item Is divisibility by \emph{four} a multiply-respects-or test? Why?\\
+    \emph{No. $4 = 2*2$, but neither $2$ nor $2$ is divisible by $4$, and $4$ is divisible by $4$, so multiply does not respect or.}
+  \item What are the non-boring multiply-respects-or tests? (Note: it's terribly unfair of me to ask this question at this stage, but we'll make sense of it eventually.)\\
+    \emph{Every number has a unique factorisation into primes, so any multiply-respects-or test is determined exactly by its behaviour on prime numbers. Such a test determines the subset $S$ of prime numbers for which it returns true, and it will thus return true exactly for any number with a factor in $S$. Every subset of the primes gives the $S$ for such a test, and it is only boring when $S$ is empty.}
+  \end{enumerate}
+\end{sol}
+
 
 
 \end{document}
