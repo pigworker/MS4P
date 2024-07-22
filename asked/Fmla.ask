@@ -1,0 +1,45 @@
+data N = Z | S N
+
+(+) :: N -> N -> N
+defined x + y inductively x where
+  defined x + y from x where
+    defined Z + y = y
+    defined S x + y = S (x + y)
+
+(*) :: N -> N -> N
+defined x * y inductively x where
+  defined x * y from x where
+    defined Z * y = Z
+    defined S x * y = y + (x * y)
+
+data Bool = False | True
+
+data Fmla
+  = Num N
+  | Var
+  | Add Fmla Fmla
+  | Mul Fmla Fmla
+
+eval :: Fmla -> N -> N
+defined eval f x inductively f where
+  defined eval f x from f where
+    defined eval (Num n) x = n
+    defined eval Var x = x
+    defined eval (Add f g) x = eval f x + eval g x
+    defined eval (Mul f g) x = eval f x * eval g x
+
+sbst :: Fmla -> Fmla -> Fmla
+defined sbst f h inductively f where
+  defined sbst f h from f where
+    defined sbst (Num n) h = Num n
+    defined sbst Var h = h
+    defined sbst (Add f g) h = Add (sbst f h) (sbst g h)
+    defined sbst (Mul f g) h = Mul (sbst f h) (sbst g h)
+
+proven eval (sbst f g) n = eval f (eval g n) inductively f where
+  proven eval (sbst f g) n = eval f (eval g n) from f where
+    given f = Add a b proven eval (sbst (Add a b) g) n = eval (Add a b) (eval g n) tested where
+      proven eval (sbst a g) n + eval (sbst b g) n = eval a (eval g n) + eval b (eval g n) under (+)
+    given f = Mul a b proven eval (sbst (Mul a b) g) n = eval (Mul a b) (eval g n) tested where
+      proven eval (sbst a g) n * eval (sbst b g) n = eval a (eval g n) * eval b (eval g n) under (*)
+
