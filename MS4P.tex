@@ -3,22 +3,38 @@
 \usepackage{latexsym}
 \usepackage{amsmath}
 \usepackage{stmaryrd}
+\usepackage{pig}
+\ColourEpigram
+
+\newcommand{\D}[1]{\blue{\mathtt{#1}}}
+\newcommand{\C}[1]{\red{\mathtt{#1}}}
+\newcommand{\F}[1]{\green{\mathtt{#1}}}
+\newcommand{\V}[1]{\purple{\mathtt{#1}}}
+\newcommand{\K}[1]{\underline{\mathrm{#1}}}
+
+\newcommand{\ask}{\mathtt{ask}}
+\newcommand{\cmt}[1]{\texttt{--}\;\mbox{#1}}
+
+\newcommand{\Number}{\D{Number}}
+\newcommand{\Ze}{\C{Z}}
+\newcommand{\Su}{\C{S}}
 
 \begin{document}
 
 \newtheorem{puz}{Puzzle}[chapter]
+\newtheorem{askism}{Askism}[chapter]
 
 
 \title{Mathematical Structure for Programming}
-\author{Conor McBride}
+\author{Conor McBride and maybe you, too}
 \maketitle
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{spuds and a lemon}
+\chapter{Spuds and a Lemon}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Let's make some numbers! You'll need a bag of lemons, a sack of potatoes, and a load of sticks (e.g. cocktail sticks) which are pointy at both ends. (If you have suitable electrodes and wires, you can make batteries as well as number.)
+Let's make some numbers! You'll need a bag of lemons, a sack of potatoes, and a load of sticks (e.g. cocktail sticks) which are pointy at both ends. (If you have suitable electrodes and wires, you can make batteries as well as numbers, but this is not that story.)
 
 There are two ways to get a number in your hand:
 \begin{enumerate}
@@ -46,12 +62,85 @@ If you're thinking ``Those aren't numbers: that's just sculpture with groceries!
 \item Our silly models with potatoes and lemons held together by sticks are as valid a representation of numbers as $5$ or MMXXIV.
 \item Count the spuds!
 \end{enumerate}
-But how do you know you \emph{can} count the spuds? How do you know that you won't just keep counting for ever? It's because you eventually get to the lemon.
+But how do you know you \emph{can} count the spuds? How do you know that you won't just keep counting for ever? It's because you eventually get to the lemon. In some sense, our models are a \emph{tangible} form of counting, starting from a tangible, not to say tangy, representation of zero, with a potato representing every step of counting up. And if you only build numbers by counting up from zero, you're bound to reach zero, sooner or later, if you count back down.
+
+
+\section{Declaring $\Number$ in $\ask$}
+
+We've built a system in which you can play with these ideas. It's called $\ask$, because it's based on a fragment of the programming language \textbf{Haskell}. 
+
+\begin{askism}[Everything Is New]
+  You work with $\ask$ to write a document which contains ideas about data and programs and proofs. At the beginning of the document, $\ask$ has no preconceived ideas about which data exist. If you want numbers, you will have to invent them, as if they are a completely new idea.
+\end{askism}
+
+To invent numbers in $\ask$, you say something like
+
+\[\begin{array}{r@{\;}r@{\;}l@{\quad}l}
+\K{data}\;\Number & = & \Ze   & \cmt{start with a lemon}\\
+                  & | & \Su\:\Number & \cmt{attach another spud}
+\end{array}\]
+
+Let's learn to read this, a little at a time.
+
+\begin{askism}[Dash Dash Comment]
+When you see two consecutive dashes, whatever comes after them is ignored, all the way to the end of the line. You can say whatever you like in a comment, and $\ask$ will ignore you. You do not have to write comments, but they may help you remember what you thought you were doing.
+\end{askism}
+
+So we could have written
+\[\begin{array}{r@{\;}r@{\;}l@{\quad}l}
+\K{data}\;\Number & = & \Ze   &\\
+                  & | & \Su\:\Number &
+\end{array}\]
+and that would be all the same to $\ask$.
+
+\begin{askism}[Indent to Carry On]
+  When the next (non-blank) line of $\ask$ code is strictly more indented than the line before, it is carrying on from the line before.
+\end{askism}
+
+So we could have written
+\[
+\K{data}\;\Number}\;=\;\Ze\;|\;\Su\:\Number
+\]
+all on one line, and it would mean the same thing. We threw in a line break to make room for the comment about the lemon, and indented to make sure that $\ask$ knew we weren't done. Making the $|$ line up with the $=$ is not important (unless you judge by appearances); making the $|$ further to the right than the $\K{d}$ of $\K{data}$ is crucial.
+
+We've talked about the shape of the code, but we should tell you what it means.
+
+\begin{askism}[Data Type Is Made of What]
+  The word $\K{data}$ is a special keyword in $\ask$. It means `I am inventing a whole new type of things!'. The name of the new type goes between $\K{data}$ and $=$, and it has to begin with a capital letter, but otherwise, you choose. After the $=$ sign, you list the choice of ways to make your new type of things, separated by $|$ signs.
+\end{askism}
+
+Our example $\K{data}$ declaration invents a new type of thing called $\Number$, and there are two ways to make things of that type.
+
+\begin{askism}[Constructor Packs Stuff]
+Each choice of `ways to make your new type of thing' is specified by giving a name beginning with a capital letter, called a `constructor' then a list of the types of the things you must pack along with the constructor to complete your new thing. The constructors names must be distinct.
+\end{askism}
+
+In our example, the constructors are $\Ze$ (for `zero') and $\Su$ (for `successor'). The $\Ze$, like our lemon, packs nothing; $\Su$, like our spud, packs another number, just as if it's attached with a stick.
+
+\begin{askism}[Capitals for Vegetables]
+  When you see a name in $\ask$ which begins with a capital letter, it's not a thing which does anything. It does not compute stuff. It just sits there being itself, and not being other things with different capital letter names, like our different vegetables stuck together with sticks. It's part of a type or some data, as specified in $\K{data}$ declarations.
+\end{askism}
+
+We can write down some examples of \emph{values} which belong to our type $\Number$:
+\[
+\Ze\qquad \Su\:\Ze\qquad \Su\:(\Su\:\Ze)\qquad \Su\:(\Su\:(\Su\:\Ze))
+\qquad \Su\:(\Su\:(\Su\:(\Su\:\Ze)))
+\]
+
+In isolation, the $\Su$ and the $\Ze$ don't do anything. They just sit there, being parts of numbers. Let's be careful about how we read and write them.
+
+\begin{askism}[Application Associates to the Left\footnote{`rather as we all did in the 60s', according to the logician, Roger Hindley}]
+  When you see two things in $\ask$ separated by space, the left thing is `applied to' the right thing. When the things are constructors, that just means `packing'. When you see more than two things in a sequence separated by space, they group to the left, so $a\:b\:c$ means $(a\:b)\:c$, not $a\:(b\:c)$. You can use round brackets to override this grouping convention.
+\end{askism}
+
+That's why we wrote $\Su\:(\Su\:\Ze)$, not $\Su\:\Su\:\Ze$. The latter would be read as $(\Su\:\Su)\:\Ze$, which is nonsense, because $\Su$ packs up things of type $\Number$, and $\Su$ on its own is not a $\Number$ --- where's its lemon?
+
+So we've invented $\Number$. And, like with the spuds and lemons, everything of type $\Number$ is made with finitely many layers of $\Su$ around a $\Ze$. There will never be any weird things of type $\Number$ that don't follow these rules, and in due course, we'll see how that enables us to \emph{compute} with numbers.
 
 
 \section{addition as substitution}
 
-Adding these numbers is easy. If you're holding one of them in each hand, work your way along the left number until you reach the left lemon, then detach it, and stab the right number with the exposed stick, then work your way back out to the leftmost spud. In other words, \emph{substitute} the right \emph{number} for the left \emph{lemon}
+Adding physical spuds-and-lemons numbers is easy. If you're holding one of them in each hand, work your way along the left number until you reach the left lemon, then detach it, and stab the right number with the exposed stick, then work your way back out to the leftmost spud. In other words, \emph{substitute} the right \emph{number} for the left \emph{lemon}
 \[\begin{array}{l@{\;\,}l}
 \spud\spud\spud\spud\spud&\lemon\\
 &+ \\
@@ -255,10 +344,7 @@ Now, in our world of grammars, we expect our parse trees to have the property th
 Is it a bad grammar? No, merely \emph{pointless}! It is well constructed. There is one choice of how to make a Brexit: you make it from a Brexit. So there are no parse trees for this grammar with finite paths, and no text can possibly make sense as a Brexit.
 
 
-\section{abstract syntax trees}
-
-\newcommand{\D}[1]{\mathtt{#1}}
-\newcommand{\C}[1]{\mathtt{#1}}
+\section{the trees we mean}
 
 Grammars tell us how to see structure in a text. A parse tree shows the original text with that structure imposed upon it. If we want to compute with a formula, perhaps to give it some sort of meaning, it is this structure which matters, not the precise details of the text. We should hope that it doesn't matter\footnote{but I could tell you some horror stories} whether you write $\X+2$ or $\X\;+\;2$, and a few extra sets of parentheses shouldn't make any difference, provided they go round valid subformulae. How do we get our hands on the structure?
 
@@ -312,6 +398,50 @@ Here's something that might seem a little more surprising. Let's take formulae `
 Coincidence? I think not! There's some connection between substituting the formulae and sequencing their interpretations, and it has something to do with the way substituting with a sprout in either hand means `do nothing' and interpreting a sprout means `do nothing' to the number we start with. Does it always work? I could say `yes', but I might be lying. And you could try some experiments, but then you might just get bored before you get unlucky. Let's learn to \emph{prove} it.
 
 (Also, let's see if we can build trees out of something more manageable than fruit and veg.)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{from veg to data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+So far, we've been computing by dismantling trees of fruit and vegetables held together by pointy sticks. Sooner or later, it might be good to compute with a computer. I'm going to teach you a little bit of a programming language called \textbf{Haskell}\footnote{We teach more Haskell in years two and three, so this is a head start.} that's useful for programming with treelike structures. This little bit of Haskell is a system I cooked up, called \textbf{ask}\footnote{What is the rest of Haskell?}.
+
+We start out with no fixed notions of which data exist, but we can invent new notions of data. Here's an example of how we do that, inventing \emph{numbers}.
+
+\[\begin{array}{r@{\;}r@{\;}l}
+\K{data}\;\D{N}& = & \C{Z} \\
+               & | & \C{S}\:\D{N}
+\end{array}\]
+
+That looks a little bit like a grammar, and the notation is inspired by grammars. How should you read this?
+\begin{itemize}
+\item Notice that the second line is indented, relative to the first line. That means the second line continues what was started in the first line, rather than being a whole new thing.
+\item The $\K{data}$ is a keyword. It introduces the invention of a new type of data.
+\item The $=$ (`is') and the $|$ (`or') are special punctuation.
+\item The $\D{N}$ between $\K{data}$ and $=$ is me \emph{choosing} a new name for a new type of data. I chose $\D{N}$ for number. To the right of $=$, I explain our (two) choices for how to make things of type $\D{N}$.
+\item The $\D{Z}$ and $\D{S}$ immediately to the right of $=$ and $|$ are called `constructors', but not in the sense of Java. The $\C{Z}$ (`zest'? no, `zero') plays the role of $\lemon$ and the $\C{S}$ (`successor') plays the role of $\spud\;$.
+\item To the right of each constructor, we see the \emph{types} of the things that constructor packs up. We're saying how many sticks there are, and what's at the other end of them. Like $\lemon$, $\C{Z}$ has no sticks. $\C{S}$ packs up one thing of type $\D{N}$, just as a $\spud\;$ connects to a number.
+\item So $\D{N}$ is a new way of making \emph{types}, while $\C{Z}$ and $\C{S}$ are4 new ways to make \emph{things} of type $\D{N}$.
+\end{itemize}
+
+What is a \emph{type}? Firstly, types are things, just as numbers are things and formulae are things. Secondly, types have a job --- \emph{classification}. Not everything is classified as a number, but knowing something is classified as `an $\D{N}$' grants us some entitlements regarding that something: we're allowed to ask whether it is $\C{Z}$ or $(\C{S}\:n)$ for some $n$ which is also classified as `an $\D{N}$'.
+
+Which brings me to a important point: Haskell is \emph{case-sensitive}, and so is \textbf{ask}. Names beginning with an uppercase letter play the role of \emph{vegetables}; names beginning with a lowercase letter play the role of \emph{variables}. Some variables stand for things we don't know, but if we know how they have been classified, that tells us there's some stuff we know how to do with those things.
+
+The whole point of computer programming is to know how to do stuff, in general, with things which have not turned up yet, in particular. Types are a great way of making promises about what is going to work as long as the things which eventually turn up are appropriately classifiable. We promise to add any two things which are classified as numbers; we insist that you don't ask to add things which are not classified as numbers. Expectations are appropriately managed. If you \textbf{ask} a question which is meaningfully classifiable, you will get a meaningful answer.
+
+Our notion of `formula' turns into data, too:
+\[\begin{array}{r@{\;}r@{\;}l}
+\K{data}\;\D{Fmla}& = & \C{Var} \\
+                  & | & \C{Num}\:\D{N} \\
+                  & | & \C{Add}\:\D{Fmla}\:\D{Fmla}\\
+                  & | & \C{Mul}\:\D{Fmla}\:\D{Fmla}\\
+\end{array}\]
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -485,6 +615,15 @@ We've been drawing
 \[
 \naw\neu \qquad \wye st{s\com t}
 \]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{sums and differences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
