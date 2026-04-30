@@ -1,4 +1,15 @@
 \documentclass{book}
+
+\makeatletter
+\newcounter{spuddy}
+\def\spudlemon{%
+  \ifnum\c@spuddy=0{lemon}%
+  \else{\addtocounter{spuddy}{-1}spud-\spudlemon}%
+  \fi}
+\def\spudslemon#1{\setcounter{spuddy}{#1}\spudlemon}
+\makeatother
+
+
 \usepackage{amssymb}
 \usepackage{latexsym}
 \usepackage{amsmath}
@@ -29,6 +40,83 @@
 \author{Conor McBride and maybe you, too}
 \maketitle
 
+\renewcommand{\thepart}{\setcounter{spuddy}{\the\c@part}\spudlemon}
+%\renewcommand{\thepart}{\arabic{part}}
+\setcounter{part}{-1}
+
+\part{the difference engine}
+
+\setcounter{chapter}{-1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{before we begin}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Find a piece of paper and a pencil, or a pen if you feel confident. Somewhere a little below and to the right of the top left corner (we'll use those gaps later), write the three numbers 0, 1, 2 in a diagonal line, like this
+\[\begin{array}{c@{}c@{}c}
+0 &   & \\
+  & 1 & \\
+  &   & 2
+\end{array}
+\hspace*{5in}\]
+We're all set to compute like a machine. You're probably not a machine, but before you ask machines to compute, you should have the decency know what it is you are asking of them. To make a step in this computation, you write another parallel diagonal stripe of numbers, starting to the right of the 0 and above the 2. Compute the numbers in the new stripe by adding the numbers from the old stripe coming from left and below-left. In the bottom row, there is nothing below-left, so imagine that the missing number is 0.
+\newcommand{\upri}{{}^\nearrow\hspace*{-0.15in}\rightarrow }
+\[\begin{array}{lr@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner&\\
+& 0\, & \rightarrow & 1     &       &   & \mbox{(because $0+1=1$)}\\
+&     & 1           & \upri & 3     &   & \mbox{(because $1+2=3$)}\\
+&     &             & 2     & \upri & 2 & \mbox{(because $2+0=2$)}
+\end{array}
+\hspace*{5in}\]
+
+Now take another step, following the same procedure.
+\[\begin{array}{lr@{}r@{}r@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner&\\
+& 0\, &   & 1 & \rightarrow  & 4     &       &   & \mbox{(because $1+3=4$)}\\
+&     & 1 &   & 3            & \upri & 5     &   & \mbox{(because $3+2=5$)}\\
+&     &   & 2 &              & 2     & \upri & 2 & \mbox{(because $2+0=2$)}
+\end{array}
+\hspace*{5in}\]
+
+Go on! Do it again!
+\[\begin{array}{lr@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner&\\
+& 0\, &   & 1 &   & 4 & \rightarrow  & 9     &       &   & \mbox{(because $4+5=9$)}\\
+&     & 1 &   & 3 &   & 5            & \upri & 7     &   & \mbox{(because $5+2=7$)}\\
+&     &   & 2 &   & 2 &              & 2     & \upri & 2 & \mbox{(because $2+0=2$)}
+\end{array}
+\hspace*{5in}\]
+
+Why, you might ask, are we doing this? It's boring and repetitive and, well, mechanical.
+And that's the point. It's an exercise in empathy: you're being the machine. It doesn't get to ask why, so shut up and compute another step!
+\[\begin{array}{lr@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner&\\
+& 0\, &   & 1 &   & 4 &   & 9 & \rightarrow & 16    &       &   & \mbox{(because $9+7=16$)}\\
+&     & 1 &   & 3 &   & 5 &   & 7           & \upri & 9     &   & \mbox{(because $7+2=9$)}\\
+&     &   & 2 &   & 2 &   & 2 &             & 2     & \upri & 2 & \mbox{(because $2+0=2$)}
+\end{array}
+\hspace*{5in}\]
+
+Give it one last go! These numbers are getting dangerously large.
+\[\begin{array}{lr@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner&\\
+& 0\, &   & 1 &   & 4 &   & 9 &   & 16 & \rightarrow & 25    &       &   & \mbox{(because $16+9=25$)}\\
+&     & 1 &   & 3 &   & 5 &   & 7 &    & 9           & \upri & 11    &   & \mbox{(because $9+2=11$)}\\
+&     &   & 2 &   & 2 &   & 2 &   &  2 &             & 2     & \upri & 2 & \mbox{(because $2+0=2$)}
+\end{array}
+\hspace*{5in}\]
+
+Now, let's see what's going on. Use the gap you left to number the stripes, starting from 0.
+\[\begin{array}{r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{\qquad\qquad}l}
+\ulcorner \backslash 0 &\backslash& 1 &\backslash& 2 &\backslash& 3 &\backslash& 4 &\backslash& 5 &&&& n\\
+\hline
+ \backslash&0\, & \backslash  & 1 & \backslash  & 4 & \backslash  & 9 & \backslash  & 16 & \backslash  & 25 &    &   & n\times n\\
+&   \backslash  & 1 & \backslash  & 3 & \backslash  & 5 & \backslash  & 7 & \backslash   & 9 &  \backslash  & 11 &   & 2\times n + 1\\
+&     &  \backslash & 2 & \backslash  & 2 & \backslash  & 2 & \backslash  &  2 & \backslash  &  2 &  \backslash  & 2 & 2}
+\end{array}
+\hspace*{5in}\]
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Spuds and a Lemon}
@@ -55,7 +143,7 @@ So that means we can make (with your hand on the left)
 
 (Incidentally, a crucial ``let's pretend'' in this game is that you can tell potatoes apart from lemons, but that blind to any difference between two potatoes or between two lemons.)
 
-Now, if you only make numbers this way, starting only with a lemon and holding onto only the most recently joined potato, your numbers will all have an important property. \textbf{If you follow the sticks down the number, you will eventually get to the lemon.} No sneaky moves, like making a circular model from potatoes and sticks, or always adding on the next potato just in time.
+Now, if you only make numbers this way, starting only with a lemon and holding onto only the most recently joined potato, your numbers will all have an important property. \textbf{If you follow the sticks down the number, you will eventually get to the lemon.} No sneaky moves, like making a circular model from potatoes and sticks, or always adding on the next potato just in time. What other ays of making spud and lemon models fail to give you legitimate numbers?
 
 If you're thinking ``Those aren't numbers: that's just sculpture with groceries!'', then I have two things to tell you.
 \begin{enumerate}
@@ -99,7 +187,7 @@ and that would be all the same to $\ask$.
 
 So we could have written
 \[
-\K{data}\;\Number}\;=\;\Ze\;|\;\Su\:\Number
+\K{data}\;\Number\;=\;\Ze\;|\;\Su\:\Number
 \]
 all on one line, and it would mean the same thing. We threw in a line break to make room for the comment about the lemon, and indented to make sure that $\ask$ knew we weren't done. Making the $|$ line up with the $=$ is not important (unless you judge by appearances); making the $|$ further to the right than the $\K{d}$ of $\K{data}$ is crucial.
 
@@ -136,6 +224,8 @@ In isolation, the $\Su$ and the $\Ze$ don't do anything. They just sit there, be
 That's why we wrote $\Su\:(\Su\:\Ze)$, not $\Su\:\Su\:\Ze$. The latter would be read as $(\Su\:\Su)\:\Ze$, which is nonsense, because $\Su$ packs up things of type $\Number$, and $\Su$ on its own is not a $\Number$ --- where's its lemon?
 
 So we've invented $\Number$. And, like with the spuds and lemons, everything of type $\Number$ is made with finitely many layers of $\Su$ around a $\Ze$. There will never be any weird things of type $\Number$ that don't follow these rules, and in due course, we'll see how that enables us to \emph{compute} with numbers.
+
+Let's practice making numbers.
 
 
 \section{addition as substitution}
@@ -622,6 +712,7 @@ We've been drawing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\part{proof and refutation}
 
 
 
