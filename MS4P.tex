@@ -7,6 +7,7 @@
   \else{\addtocounter{spuddy}{-1}spud-\spudlemon}%
   \fi}
 \def\spudslemon#1{\setcounter{spuddy}{#1}\spudlemon}
+\renewcommand{\thepart}{\setcounter{spuddy}{\the\c@part}\spudlemon}
 \makeatother
 
 
@@ -40,7 +41,6 @@
 \author{Conor McBride and maybe you, too}
 \maketitle
 
-\renewcommand{\thepart}{\setcounter{spuddy}{\the\c@part}\spudlemon}
 %\renewcommand{\thepart}{\arabic{part}}
 \setcounter{part}{-1}
 
@@ -53,10 +53,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Find a piece of paper and a pencil, or a pen if you feel confident. Somewhere a little below and to the right of the top left corner (we'll use those gaps later), write the three numbers 0, 1, 2 in a diagonal line, like this
-\[\begin{array}{c@{}c@{}c}
-0 &   & \\
-  & 1 & \\
-  &   & 2
+\[\begin{array}{cc@{}c@{}c}
+\ulcorner \\
+&0 &   & \\
+&  & 1 & \\
+&  &   & 2
 \end{array}
 \hspace*{5in}\]
 We're all set to compute like a machine. You're probably not a machine, but before you ask machines to compute, you should have the decency know what it is you are asking of them. To make a step in this computation, you write another parallel diagonal stripe of numbers, starting to the right of the 0 and above the 2. Compute the numbers in the new stripe by adding the numbers from the old stripe coming from left and below-left. In the bottom row, there is nothing below-left, so imagine that the missing number is 0.
@@ -116,10 +117,75 @@ Now, let's see what's going on. Use the gap you left to number the stripes, star
 \end{array}
 \hspace*{5in}\]
 
+Each stripe is labelled by the number of steps it took us to get there: no steps for the starting stripe, 0 1 2, one step for the next stripe, 1 3 2, two steps for 4 5 2, and so on. Looking at the rows instead of the stripes, we see the top row has the squares of the step count, the middle row steps through the odd numbers, and the bottom row is always 2. The difference between successive odd numbers is always 2, and the difference between successive squares is always the next odd number. Why is that? Is it your fault, or mine?
+
+It's my fault, of course! You computed successive stripes by following an `adding up' rule which has nothing to do with being either odd or square, but I gave you the numbers, 0 1 2, to start from. You were the computer: I wrote the program. When I put that 2 at the end, I made sure the bottom row would always be 2. That means the middle row will keep going up by 2, so the fact that I kicked the middle row off with 1 made you compute the odd numbers. Meanwhile, let me show you a table:
+\[\begin{array}{|c|c|c|c||c|}
+\hline
+1 & 2 & \cdots & n & n+1 \\
+\hline
+2 & 4 & \cdots & 2\timesn & 2\times(n+1) \\
+\hline
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+\hline
+n & n\times2 & \cdots & n\times n & n\times(n+1) \\
+\hline
+\hline
+n+1 & (n+1)\times 2 & \cdots & (n+1)\times n & (n+1)\times(n+1) \\
+\hline
+\end{array}\]
+The number in each cell of the table tells you the number of cells in the rectangle which starts in the top left corner and has that cell as its bottom right corner. For the top left cell, that rectangle is exactly that cell. By the time we are $n$ cells right and $n$ cells down, we have enclosed $n\times n$ cells. To go down further by another one, we would enclose another $n$ cells. Likewise, to go right, we would enclose another $n$ cells. To do both, we enclose another $2\times n + 1$ cells: both of those blocks of $n$ and another $1$ in the bottom right corner. That is to say, to go from $n$ squared to $(n+1)$ squared, you increase by $2\times n + 1$, i.e., the next odd number.
+
+So when I chose the 0, I chose that we were starting at $0\times 0$, and hence that the top row would give us the sequence of squares. We're using a \emph{general} mechanism of adding up numbers in a repetitive pattern to compute \emph{in this instance} the sequence of squares, by choosing to start \emph{in this instance} with the stripe 0 1 2. You could choose to use the same mechanism to compute a different sequence by kicking it off with a different stripe.
+
+What happens if you choose 0 0 1, instead?
+\[\begin{array}{r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}l@{}r@{}r@{\qquad\qquad}l}
+\ulcorner \backslash 0 &\backslash& 1 &\backslash& 2 &\backslash& 3 &\backslash& 4 &\backslash& 5 &&&& n\\
+\hline
+ \backslash&0\, & \backslash  & 0 & \backslash  & 1 & \backslash  & 3 & \backslash  & 6 & \backslash  & 10 &    &   & \mbox{the total of the numbers less than $n$}\\
+&   \backslash  & 0 & \backslash  & 1 & \backslash  & 2 & \backslash  & 3 & \backslash   & 4 &  \backslash   5 & &  & \mbox{$n$, being the total of $n$ copies of $1$}\\
+&     &  \backslash & 1 & \backslash  & 1 & \backslash  & 1 & \backslash  &  1 & \backslash  &  1  \backslash  1 &&& 1}
+\end{array}
+\hspace*{5in}\]
+
+What happens if you choose 0 0 2? That is to say, what happens if you double your opening stripe? Well, remember that our basic move consists of adding two numbers we already have. If you add the doubles of two numbers, you get double their sum: $2\times n +2\times m = 2\times(n + m)$. So everything doubles (apart from the step counts).
+\[\begin{array}{r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}l@{}r@{}r@{\qquad\qquad}l}
+\ulcorner \backslash 0 &\backslash& 1 &\backslash& 2 &\backslash& 3 &\backslash& 4 &\backslash& 5 &&&& n\\
+\hline
+ \backslash&0\, & \backslash  & 0 & \backslash  & 2 & \backslash  & 6 & \backslash  & 12 & \backslash  & 20 &    &   & \mbox{twice the total of the numbers less than $n$}\\
+&   \backslash  & 0 & \backslash  & 2 & \backslash  & 4 & \backslash  & 6 & \backslash\;   & 8 &  \backslash   10 & &  & \mbox{$2\times n$, being the total of $n$ copies of $2$}\\
+&     &  \backslash & 2 & \backslash  & 2 & \backslash  & 2 & \backslash  &  2 & \backslash  &  2  \backslash  2 &&& 2}
+\end{array}
+\hspace*{5in}\]
+
+What happens if you choose the shorter stripe, 0 1? In effect, you chop off the top row from 0 0 1 and slide everything up and left.
+\[\begin{array}{r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}r@{}l@{}r@{}r@{\qquad\qquad}l}
+\ulcorner \backslash 0 &\backslash& 1 &\backslash& 2 &\backslash& 3 &\backslash& 4 &\backslash& 5 &&& n\\
+\hline
+\backslash  & 0 & \backslash  & 1 & \backslash  & 2 & \backslash  & 3 & \backslash   & 4 &  \backslash   5 & &  & \mbox{$n$, being the total of $n$ copies of $1$}\\
+     &  \backslash & 1 & \backslash  & 1 & \backslash  & 1 & \backslash  &  1 & \backslash  &  1  \backslash  1 &&& 1}
+\end{array}
+\hspace*{5in}\]
+
+Now, what happens if we take these last two runs and add together the numbers in corresponding positions, padding out the shorter stripes with 0 whenever we need to? Our starting stripe becomes
+\[\begin{array}{rrrr}
+& 0 & 0 & 2 \\
++ & 0 & 1 & \\
+\hline
+= & 0 & 1 & 2
+\end{array}\]
+which may seem familiar. Along the bottom, adding just gives copies of 2. In the middle, our even numbers each have a 1 added, giving the odd numbers. And along the top,
+\[
+0+0=0 \quad 0+1=1 \quad 2+2=4 \quad 6+3=9 \quad 12+4=16 \quad 20+5=25
+\]
+out pop the squares! Adding the input stripes has the effect of adding the whole tables, because we are adding together the same stuff, slightly rearranged in a way that does not make a difference. If we have $a+b$ in one table and $c+d$ in the other, we get $(a+c)+(b+d)$ in the combined table, which arrives at the same value as $(a+b)+(c+d)$.
+
+You have been simulating \emph{the difference engine}, one of the earliest pieces of computing machinery designed by human beings. Feed in the input stripe for the sequence you want, and out comes the sequence! At least, it \emph{seems} to work. Do we believe our eyes? Can we come with a satisfactory \emph{explanation}? What is it about numbers that makes this machine do its thing? What are numbers anyway? How do we even start to talk about these ideas? What tools can we use to help us think about it? Let me invite you on a journey of invention.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Spuds and a Lemon}
+\chapter{spuds and a lemon}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Let's make some numbers! You'll need a bag of lemons, a sack of potatoes, and a load of sticks (e.g. cocktail sticks) which are pointy at both ends. (If you have suitable electrodes and wires, you can make batteries as well as numbers, but this is not that story.)
